@@ -1,0 +1,56 @@
+server:
+  port: ${SPRING_PORT}
+  servlet:
+    context-path: ${BASE_PATH}
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show-sql: true
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
+
+  verification:
+    code:
+      expiration: 1800 # ? ??
+
+  jwt:
+    secret: ${JWT_SECRET}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+  org:
+    gradle:
+      caching: true
+
+  messages:
+    basename: messages/validation, messages/error
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+      hibernate:
+        SQL: DEBUG
+      type:
+        descriptor:
+          sql:
+            BasicBinder: TRACE
+
+springdoc:
+  swagger-ui:
+    path: /docs
