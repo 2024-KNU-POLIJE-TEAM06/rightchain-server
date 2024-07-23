@@ -11,9 +11,10 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         show-sql: true
         format_sql: true
         jdbc:
@@ -24,7 +25,7 @@ spring:
       expiration: 1800 # ? ??
 
   jwt:
-    secret: ${JWT_SECRET}
+    secret: c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwQ
 
   data:
     redis:

@@ -1,26 +1,26 @@
-version: "3"
 
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: rightchain-server
+    container_name: rightchain
+    env_file:
+      - .env.local
     depends_on:
       - redis
       - database
     ports:
       - ${SPRING_PORT}:${SPRING_PORT}
-    environment:
-      - STORAGE_PATH=${STORAGE_PATH}
-    volumes:
-      - rightchain-storage:${STORAGE_PATH}
     restart: always
+    volumes:
+      - rightchain-storage:${BASE_PATH}
 
   database:
     image: postgres:latest
     container_name: rightchain-database
     environment:
+      POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     command: -p ${DB_PORT}
@@ -45,6 +45,6 @@ services:
     restart: always
 
 volumes:
-  rightchian-database:
-  rightchain-redis:
   rightchain-storage:
+  rightchain-database:
+  rightchain-redis:
