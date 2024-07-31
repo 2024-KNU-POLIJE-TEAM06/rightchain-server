@@ -22,10 +22,23 @@ spring:
 
   verification:
     code:
-      expiration: 1800 # ? ??
+      expiration: 1800 #
 
   jwt:
-    secret: c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwQ
+    secret: ${JWT_SECRET}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            redirect-uri: ${REDIRECT_URI}
+            scope:  #scope openId, google만 사용하면 설정 안하고 default 사용해도됨.
+              - email
+              - profile
+
 
   data:
     redis:
