@@ -2,6 +2,7 @@ package com.example.rightchain.oauth.details;
 
 import com.example.rightchain.account.entity.Account;
 import com.example.rightchain.oauth.dto.GoogleResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -10,14 +11,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-@RequiredArgsConstructor
+//if you want to expand to other site, you can refactor this.
+//this only used for google oauth
+
+@Getter
 public class CustomOAuth2User implements OAuth2User {
 
     private final Account account;
-    private final GoogleResponse googleResponse;
+    private GoogleResponse googleResponse;
 
-    //if you want to expand other site, you can refactor this.
-    //this dto only used for google oauth
+    public CustomOAuth2User(Account account, GoogleResponse googleResponse) {
+        this.account = account;
+        this.googleResponse = googleResponse;
+    }
+
+    public CustomOAuth2User(Account account) {
+        this.account = account;
+    }
+
     @Override
     public Map<String, Object> getAttributes() {
         return googleResponse.attribute();

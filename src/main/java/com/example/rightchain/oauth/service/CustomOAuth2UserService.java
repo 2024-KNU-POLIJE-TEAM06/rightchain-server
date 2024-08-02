@@ -34,6 +34,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             Optional<Account> accountOptional = accountRepository.findByEmail(email);
 
             Account account;
+
             if (accountOptional.isPresent()) {
                 account = accountOptional.get();
             }
@@ -51,4 +52,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationException("Unsupported registrationId: " + registrationId);
         }
     }
+
+
 }
