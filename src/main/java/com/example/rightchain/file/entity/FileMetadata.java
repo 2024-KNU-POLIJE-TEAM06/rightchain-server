@@ -31,4 +31,5 @@ public class FileMetadata {
         this.filePath = filePath;
         this.report = report;
     }
+
 }

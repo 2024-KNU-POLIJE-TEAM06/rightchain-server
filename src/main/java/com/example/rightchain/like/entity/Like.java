@@ -4,6 +4,7 @@ import com.example.rightchain.account.entity.Account;
 import com.example.rightchain.report.entity.Report;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,10 @@ public class Like {
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Report.class)
     @JoinColumn(name = "report_id")
     private Report report;
+
+    @Builder
+    public Like(Account account, Report report) {
+        this.account = account;
+        this.report = report;
+    }
 }

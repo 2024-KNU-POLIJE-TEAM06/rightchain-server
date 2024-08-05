@@ -3,6 +3,7 @@ package com.example.rightchain.chain.entity;
 import com.example.rightchain.report.entity.Report;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,5 +26,10 @@ public class Chain {
     @JoinColumn(name = "report_id")
     private Report report; // 사건 번호
 
-
+    @Builder
+    public Chain(String walletName, String address, ProgressStatus progressStatus) {
+        this.walletName = walletName;
+        this.address = address;
+        this.progressStatus = progressStatus;
+    }
 }

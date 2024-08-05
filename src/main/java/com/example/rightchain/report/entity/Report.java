@@ -4,6 +4,7 @@ import com.example.rightchain.account.entity.Account;
 import com.example.rightchain.file.entity.FileMetadata;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,9 +33,14 @@ public class Report {
     @JoinColumn(name = "report_id")
     private List<FileMetadata> files = new ArrayList<>();
 
-    //이부분 파일 추가하는거 dto로 받아서 저장 argument dto로 바꾸기
-//    public void addFile(String fileName, String filePath) {
-//        FileMetadata fileMetadata = new FileMetadata(fileName, filePath);
-//        this.files.add}
+    @Builder
+    public Report(String title, String content, ReportType reportType, List<FileMetadata> files, Account account) {
+        this.title = title;
+        this.content = content;
+        this.reportType = reportType;
+        this.files = files;
+        this.account = account;
+        this.isCaseClose = false;
+    }
 }
 
