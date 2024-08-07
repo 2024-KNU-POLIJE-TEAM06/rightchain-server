@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,9 +20,9 @@ public class LikeController {
     @PostMapping("/{reportId}")
     @PreAuthorize("hasRole('USER') and isAuthenticated()")
     public ResponseEntity<Long> likeReport(
-            Authentication authentication,
+            @AuthenticationPrincipal CustomOAuth2User oAuth2User,
             @PathVariable Long reportId ) {
-        CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+
         Account account = oAuth2User.getAccount();
         Boolean liked = likeService.toggleLike(account, reportId);
         Long likesCount = likeService.countLike(reportId);

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,12 +20,13 @@ public class ReportService {
     private final FileMetadataRepository fileMetadataRepository;
 
     @Transactional
-    public Report writeReport(CreateReportRequest createReportRequest, Account account) {
+    public Report writeReport(CreateReportRequest createReportRequest, Account account, String walletAddress) {
         List<FileMetadata> files = fileMetadataRepository.findAllById(createReportRequest.fileIds());
 
         Report report = Report.builder()
                 .account(account)
                 .files(files)
+                .walletAddress(walletAddress)
                 .reportType(createReportRequest.reportType())
                 .content(createReportRequest.content())
                 .title(createReportRequest.title())
@@ -36,4 +36,7 @@ public class ReportService {
     }
 
 
+    public Report findById(Long reportId) {
+        return reportRepository.findById(reportId).orElseThrow(()-> new IllegalStateException("Report not found"));
+    }
 }

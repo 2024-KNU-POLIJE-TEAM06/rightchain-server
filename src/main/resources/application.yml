@@ -30,6 +30,8 @@ spring:
   file:
     upload-dir: ${STORAGE_PATH}
 
+  chain:
+    api-token: ${API_TOKEN}
   security:
     oauth2:
       client:

@@ -21,7 +21,10 @@ public class Report {
 
     private String title;
     private String content;
+
+    @Enumerated(EnumType.STRING)
     private ReportType reportType;
+
     private boolean isCaseClose;
 
 

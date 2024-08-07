@@ -27,9 +27,10 @@ public class Chain {
     private Report report; // 사건 번호
 
     @Builder
-    public Chain(String walletName, String address, ProgressStatus progressStatus) {
+    public Chain(String walletName, String address, ProgressStatus progressStatus, Report report) {
         this.walletName = walletName;
         this.address = address;
         this.progressStatus = progressStatus;
+        this.report = report;
     }
 }
