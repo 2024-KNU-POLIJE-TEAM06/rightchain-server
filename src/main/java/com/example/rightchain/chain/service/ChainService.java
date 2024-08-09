@@ -7,7 +7,6 @@ import com.example.rightchain.report.entity.Report;
 import com.example.rightchain.report.repository.ReportRepository;
 import com.example.rightchain.wallet.component.BlockSDKApi;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

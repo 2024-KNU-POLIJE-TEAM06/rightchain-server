@@ -3,9 +3,9 @@ package com.example.rightchain.report.controller;
 import com.example.rightchain.account.entity.Account;
 import com.example.rightchain.oauth.details.CustomOAuth2User;
 import com.example.rightchain.report.dto.request.CreateReportRequest;
+import com.example.rightchain.report.dto.response.ReportResponse;
 import com.example.rightchain.report.entity.Report;
 import com.example.rightchain.report.service.ReportService;
-import com.example.rightchain.wallet.component.BlockSDKApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
-    private final BlockSDKApi blockSDKApi;
 
     @GetMapping("/{reportId}")
-    public ResponseEntity<Report> getReportById(@PathVariable Long reportId) {
-        return null;
+    public ResponseEntity<ReportResponse> getReportById(@PathVariable Long reportId) {
+        ReportResponse response = reportService.getReportById(reportId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
@@ -33,14 +34,13 @@ public class ReportController {
             @RequestBody CreateReportRequest createReportRequest) {
 
         Account account = customOAuth2User.getAccount();
-        //create wallet
-        String walletAddress = blockSDKApi.createWallet(createReportRequest.title());
 
-        Report report = reportService.writeReport(createReportRequest, account, walletAddress);
+        Report report = reportService.writeReport(createReportRequest, account);
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(walletAddress);
+        return ResponseEntity.status(HttpStatus.CREATED).body(report.getTitle());
     }
+
 
 
 }

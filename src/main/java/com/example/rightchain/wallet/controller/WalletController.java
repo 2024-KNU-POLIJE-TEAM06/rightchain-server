@@ -21,7 +21,7 @@ public class WalletController {
             @RequestParam("address") String address) {
         Map walletInfo = blockSDKApi.readWallet(address);
         if (walletInfo == null) {
-            throw new IllegalStateException("조회 실패!");
+            throw new IllegalStateException("failed to read wallet");
         }
 
         return ResponseEntity.ok(walletInfo);
