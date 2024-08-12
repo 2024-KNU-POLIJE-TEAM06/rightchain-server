@@ -1,4 +1,4 @@
-package com.example.rightchain.wallet.component;
+package com.example.rightchain.wallet.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

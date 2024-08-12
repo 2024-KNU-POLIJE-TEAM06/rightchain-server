@@ -1,6 +1,6 @@
 package com.example.rightchain.wallet.controller;
 
-import com.example.rightchain.wallet.component.BlockSDKApi;
+import com.example.rightchain.wallet.api.BlockSDKApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
