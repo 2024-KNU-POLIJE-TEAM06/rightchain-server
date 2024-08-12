@@ -2,6 +2,7 @@ package com.example.rightchain.report.entity;
 
 import com.example.rightchain.account.entity.Account;
 import com.example.rightchain.file.entity.FileMetadata;
+import com.example.rightchain.like.entity.Like;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,6 +32,9 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Like> likes = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")

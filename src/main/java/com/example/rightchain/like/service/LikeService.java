@@ -3,9 +3,11 @@ package com.example.rightchain.like.service;
 import com.example.rightchain.account.entity.Account;
 import com.example.rightchain.like.entity.Like;
 import com.example.rightchain.like.repository.LikeRepository;
+import com.example.rightchain.report.dto.response.ReportResponse;
 import com.example.rightchain.report.entity.Report;
 import com.example.rightchain.report.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +35,12 @@ public class LikeService {
 
         return true;
     }
+
     public Long countLike(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(()-> new RuntimeException("report not found"));
 
         return likeRepository.countByReport(report);
     }
+
 }

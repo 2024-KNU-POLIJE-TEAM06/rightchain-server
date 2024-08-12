@@ -5,7 +5,7 @@ import com.example.rightchain.chain.entity.ProgressStatus;
 import com.example.rightchain.chain.repository.ChainRepository;
 import com.example.rightchain.report.entity.Report;
 import com.example.rightchain.report.repository.ReportRepository;
-import com.example.rightchain.wallet.component.BlockSDKApi;
+import com.example.rightchain.wallet.api.BlockSDKApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
