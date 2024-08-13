@@ -2,6 +2,7 @@ package com.example.rightchain.file.controller;
 
 import com.example.rightchain.file.entity.FileMetadata;
 import com.example.rightchain.file.repository.FileMetadataRepository;
+import com.example.rightchain.file.service.FileService;
 import com.example.rightchain.file.service.FileValidationServiceImpl;
 import com.example.rightchain.report.entity.Report;
 import com.example.rightchain.report.repository.ReportRepository;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileController {
     private final FileMetadataRepository fileMetadataRepository;
-    private final ReportRepository reportRepository;
+    private final FileService fileService;
     private final FileValidationServiceImpl fileValidationService;
 
     @Value("${spring.file.upload-dir}")
@@ -35,7 +36,7 @@ public class FileController {
 
     @PostMapping("/upload")
     @PreAuthorize("hasRole('USER') and isAuthenticated()")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("reportId") Long reportId) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("Cannot upload empty file.");
         }
@@ -45,23 +46,8 @@ public class FileController {
         }
 
         try {
-            String fileName = UUID.randomUUID().toString();
-            Path destinationPath = Paths.get(uploadDir).resolve(fileName);
-
-            Files.copy(file.getInputStream(), destinationPath);
-
-            Report report = reportRepository.findById(reportId)
-                    .orElseThrow(() -> new IllegalArgumentException("No report found with ID: " + reportId));
-
-            FileMetadata fileMetadata = FileMetadata.builder()
-                    .originalFileName(file.getOriginalFilename())
-                    .fileName(fileName)
-                    .filePath(destinationPath.toString())
-                    .report(report)
-                    .build();
-
-            fileMetadataRepository.save(fileMetadata);
-            return ResponseEntity.ok("File '" + file.getOriginalFilename() + "' uploaded successfully as " + fileName);
+            FileMetadata fileMetadata = fileService.saveFile(file, uploadDir);
+            return ResponseEntity.ok("File '" + file.getOriginalFilename() + "' uploaded successfully as" + fileMetadata.getFileName());
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Failed to upload file due to IO error: " + e.getMessage());
         } catch (Exception e) {

@@ -14,8 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,17 +33,40 @@ public class ReportService {
 
     @Transactional
     public Report writeReport(CreateReportRequest createReportRequest, Account account) {
-        List<FileMetadata> files = fileMetadataRepository.findAllById(createReportRequest.fileIds());
 
         Report report = Report.builder()
                 .account(account)
-                .files(files)
                 .reportType(createReportRequest.reportType())
                 .content(createReportRequest.content())
                 .title(createReportRequest.title())
                 .build();
 
-        return reportRepository.save(report);
+        reportRepository.save(report);
+
+        for (MultipartFile file : createReportRequest.files()) {
+            if (file.isEmpty()) {
+                throw new IllegalArgumentException("Cannot upload empty file.");
+            }
+            String fileName = UUID.randomUUID().toString();
+            Path destinationPath = Paths.get("path/to/your/storage").resolve(fileName);
+
+            try {
+                Files.copy(file.getInputStream(), destinationPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload file", e);
+            }
+
+            FileMetadata fileMetadata = FileMetadata.builder()
+                    .originalFileName(file.getOriginalFilename())
+                    .fileName(fileName)
+                    .filePath(destinationPath.toString())
+                    .report(report) // 연관 관계 설정
+                    .build();
+
+            fileMetadataRepository.save(fileMetadata);
+        }
+
+        return report;
     }
 
     public ReportResponse getReportById(Long reportId) {
