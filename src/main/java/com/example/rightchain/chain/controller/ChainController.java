@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/chains")
+@RequestMapping("/api/v1/chains")
 @RequiredArgsConstructor
 public class ChainController {
     private final ChainService chainService;

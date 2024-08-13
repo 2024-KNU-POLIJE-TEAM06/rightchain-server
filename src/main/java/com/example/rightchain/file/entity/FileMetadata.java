@@ -20,16 +20,11 @@ public class FileMetadata {
     private String fileName; //uuid
     private String filePath;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "report_id")
-    private Report report; //
-
     @Builder
-    public FileMetadata(String originalFileName,String fileName, String filePath, Report report) {
+    public FileMetadata(String originalFileName,String fileName, String filePath) {
         this.originalFileName = originalFileName;
         this.fileName = fileName;
         this.filePath = filePath;
-        this.report = report;
     }
 
 }

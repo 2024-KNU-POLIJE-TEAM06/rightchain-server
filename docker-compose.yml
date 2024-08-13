@@ -13,7 +13,7 @@ services:
       - ${SPRING_PORT}:${SPRING_PORT}
     restart: always
     volumes:
-      - rightchain-storage:${BASE_PATH}
+      - rightchain-storage:${STORAGE_PATH}
 
   database:
     image: postgres:latest

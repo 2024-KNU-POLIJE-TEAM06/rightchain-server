@@ -1,7 +1,8 @@
 package com.example.rightchain.report.controller;
 
 import com.example.rightchain.account.entity.Account;
-import com.example.rightchain.file.service.FileValidationServiceImpl;
+import com.example.rightchain.file.entity.FileMetadata;
+import com.example.rightchain.file.repository.FileMetadataRepository;
 import com.example.rightchain.oauth.details.CustomOAuth2User;
 import com.example.rightchain.report.dto.request.CreateReportRequest;
 import com.example.rightchain.report.dto.response.ReportResponse;
@@ -14,18 +15,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("/api/v1/reports")
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
-    private final FileValidationServiceImpl fileValidationService;
+    private final FileMetadataRepository fileMetadataRepository;
 
     @GetMapping("/{reportId}")
     public ResponseEntity<ReportResponse> getReportById(@PathVariable Long reportId) {
@@ -38,19 +42,19 @@ public class ReportController {
     @PostMapping
     @PreAuthorize("hasRole('USER') and isAuthenticated()")
     public ResponseEntity<String> writeReport(
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User, //test this
+            Authentication authentication, //test this
             @RequestBody CreateReportRequest createReportRequest) throws IOException {
 
+        CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         Account account = customOAuth2User.getAccount();
+        List<FileMetadata> fileMetadata = new ArrayList<>();
 
-        // 파일 확장자 유효성 검사
-        for (MultipartFile file : createReportRequest.files()) {
-            if (!fileValidationService.validateFileExtension(file)) {
-                return ResponseEntity.badRequest().body("Invalid file extension. Allowed extensions are: png, jpg, jpeg, pdf");
-            }
+        for (Long fileId : createReportRequest.filesId()) {
+            FileMetadata currentFileMetadata = fileMetadataRepository.findById(fileId).orElseThrow(()-> new FileNotFoundException("File not found"));
+            fileMetadata.add(currentFileMetadata);
         }
 
-        Report report = reportService.writeReport(createReportRequest, account);
+        Report report = reportService.writeReport(createReportRequest, account, fileMetadata);
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(report.getTitle());

@@ -8,6 +8,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthorizationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
     private final AccountService accountService;
@@ -29,8 +31,10 @@ public class JwtAuthorizationFilter extends GenericFilterBean {
             return ;
         }
         String token = jwtTokenProvider.resolveAccessToken((HttpServletRequest) request);
+        log.info("토큰 : "+token);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token, accountService);
+            log.info("이프문 check");
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
