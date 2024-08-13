@@ -35,7 +35,7 @@ public class ReportController {
     @PostMapping
     @PreAuthorize("hasRole('USER') and isAuthenticated()")
     public ResponseEntity<String> writeReport(
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User, //이거 테스트해보기
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User, //test this
             @RequestBody CreateReportRequest createReportRequest) {
 
         Account account = customOAuth2User.getAccount();

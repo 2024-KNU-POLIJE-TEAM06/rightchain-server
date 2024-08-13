@@ -22,7 +22,7 @@ public class FileMetadata {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
-    private Report report; // 파일이 속한 리포트 참조
+    private Report report; //
 
     @Builder
     public FileMetadata(String originalFileName,String fileName, String filePath, Report report) {
