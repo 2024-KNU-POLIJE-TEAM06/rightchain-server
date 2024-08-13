@@ -8,7 +8,6 @@ services:
     env_file:
       - .env.local
     depends_on:
-      - redis
       - database
     ports:
       - ${SPRING_PORT}:${SPRING_PORT}
@@ -32,19 +31,6 @@ services:
     volumes:
       - rightchain-database:/var/lib/postgresql/data
 
-  redis:
-    image: redis:latest
-    container_name: rightchain-redis
-    command: --port ${REDIS_PORT} --requirepass ${REDIS_PASSWORD}
-    expose:
-      - ${REDIS_PORT}
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
-    volumes:
-      - rightchain-redis:/data
-    restart: always
-
 volumes:
   rightchain-storage:
   rightchain-database:
-  rightchain-redis:
