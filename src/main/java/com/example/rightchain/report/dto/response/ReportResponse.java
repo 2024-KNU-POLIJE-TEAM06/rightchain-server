@@ -22,7 +22,7 @@ public record ReportResponse(
                 report.getContent(),
                 report.getReportType(),
                 report.isCaseClose(),
-                report.getAccount().getName(), // Assuming Account has a getName() method
+                report.getAccount().getName(),
                 report.getFiles()
         );
     }

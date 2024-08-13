@@ -2,6 +2,7 @@ package com.example.rightchain.file.service;
 
 import com.example.rightchain.file.entity.FileMetadata;
 import com.example.rightchain.file.repository.FileMetadataRepository;
+import com.example.rightchain.report.entity.Report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ public class FileService {
     private final FileMetadataRepository fileMetadataRepository;
 
     @Transactional
-    public FileMetadata saveFile(MultipartFile file, String uploadDir) throws IOException {
+    public FileMetadata saveFile(MultipartFile file, String uploadDir, Report report) throws IOException {
         String fileName = UUID.randomUUID().toString();
         Path destinationPath = Paths.get(uploadDir).resolve(fileName);
 
@@ -29,6 +30,7 @@ public class FileService {
         FileMetadata fileMetadata = FileMetadata.builder()
                 .originalFileName(file.getOriginalFilename())
                 .fileName(fileName)
+                .report(report)
                 .filePath(destinationPath.toString())
                 .build();
 

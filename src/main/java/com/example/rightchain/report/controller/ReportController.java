@@ -1,6 +1,7 @@
 package com.example.rightchain.report.controller;
 
 import com.example.rightchain.account.entity.Account;
+import com.example.rightchain.file.service.FileValidationServiceImpl;
 import com.example.rightchain.oauth.details.CustomOAuth2User;
 import com.example.rightchain.report.dto.request.CreateReportRequest;
 import com.example.rightchain.report.dto.response.ReportResponse;
@@ -15,14 +16,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/reports")
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
+    private final FileValidationServiceImpl fileValidationService;
 
     @GetMapping("/{reportId}")
     public ResponseEntity<ReportResponse> getReportById(@PathVariable Long reportId) {
@@ -36,9 +39,16 @@ public class ReportController {
     @PreAuthorize("hasRole('USER') and isAuthenticated()")
     public ResponseEntity<String> writeReport(
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User, //test this
-            @RequestBody CreateReportRequest createReportRequest) {
+            @RequestBody CreateReportRequest createReportRequest) throws IOException {
 
         Account account = customOAuth2User.getAccount();
+
+        // 파일 확장자 유효성 검사
+        for (MultipartFile file : createReportRequest.files()) {
+            if (!fileValidationService.validateFileExtension(file)) {
+                return ResponseEntity.badRequest().body("Invalid file extension. Allowed extensions are: png, jpg, jpeg, pdf");
+            }
+        }
 
         Report report = reportService.writeReport(createReportRequest, account);
 
