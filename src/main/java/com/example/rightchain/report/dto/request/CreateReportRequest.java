@@ -10,7 +10,7 @@ public record CreateReportRequest(
         String title,
         String content,
         ReportType reportType,
-        List<MultipartFile> files
+        List<Long> filesId
 ) {
 
 }

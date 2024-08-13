@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/wallets")
+@RequestMapping("/api/v1/wallets")
 @RequiredArgsConstructor
 public class WalletController {
     private final BlockSDKApi blockSDKApi;

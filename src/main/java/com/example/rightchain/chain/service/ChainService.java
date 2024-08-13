@@ -26,20 +26,21 @@ public class ChainService {
     public void createChain(Report report) {
         String address = blockSDKApi.createWallet("[1] REPORT_SUBMITTED");
 
-        chainRepository.save(
+        Chain chain = chainRepository.save(
                 Chain.builder()
                         .address(address)
                         .walletName("[1] REPORT_SUBMITTED")
                         .progressStatus(ProgressStatus.REPORT_SUBMITTED)
                         .report(report)
                         .build());
+
+        report.getChains().add(chain);
     }
 
     @Transactional
     public void stackChain(Long reportId, String walletName) {
         Report report = reportRepository.findById(reportId).orElseThrow(()-> new RuntimeException("report not found"));
         ProgressStatus currentProgressStatus = getCurrentProgress(report);
-
         if (walletName.equals(ENTRY_POINT)) {
             updateProgressStatus(report, currentProgressStatus);
         } else {

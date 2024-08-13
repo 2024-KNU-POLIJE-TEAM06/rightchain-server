@@ -1,6 +1,7 @@
 package com.example.rightchain.report.entity;
 
 import com.example.rightchain.account.entity.Account;
+import com.example.rightchain.chain.entity.Chain;
 import com.example.rightchain.file.entity.FileMetadata;
 import com.example.rightchain.like.entity.Like;
 import jakarta.persistence.*;
@@ -29,7 +30,7 @@ public class Report {
     private boolean isCaseClose;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Account.class)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -40,14 +41,19 @@ public class Report {
     @JoinColumn(name = "report_id")
     private List<FileMetadata> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chain> chains = new ArrayList<>();
+
+
     @Builder
-    public Report(String title, String content, ReportType reportType, List<FileMetadata> files, Account account) {
+    public Report(String title, String content, ReportType reportType, List<FileMetadata> files, Account account, List<Chain> chains) {
         this.title = title;
         this.content = content;
         this.reportType = reportType;
         this.files = files;
         this.account = account;
         this.isCaseClose = false;
+        this.chains = chains;
     }
 }
 
