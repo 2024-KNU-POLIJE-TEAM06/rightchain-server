@@ -1,6 +1,5 @@
 package com.example.rightchain.chain.controller;
 
-import com.example.rightchain.chain.dto.request.ChainStackRequest;
 import com.example.rightchain.chain.dto.response.ChainResponse;
 import com.example.rightchain.chain.service.ChainService;
 import lombok.RequiredArgsConstructor;

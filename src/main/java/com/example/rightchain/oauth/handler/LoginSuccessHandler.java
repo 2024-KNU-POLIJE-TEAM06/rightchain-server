@@ -31,7 +31,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         cookie.setMaxAge(60 * 60 * 24 * 10);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
-        response.sendRedirect("http://localhost:53000/");
+        response.sendRedirect("http://ec2-108-136-47-162.ap-southeast-3.compute.amazonaws.com/:53000/");
     }
 
 }

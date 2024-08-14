@@ -53,7 +53,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 프론트엔드 도메인 나중에 바꾸기
+        configuration.setAllowedOrigins(Arrays.asList("http://ec2-108-136-47-162.ap-southeast-3.compute.amazonaws.com/:3000")); // 프론트엔드 도메인 나중에 바꾸기
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
