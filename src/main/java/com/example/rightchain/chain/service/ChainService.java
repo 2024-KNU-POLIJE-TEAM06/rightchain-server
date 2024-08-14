@@ -49,6 +49,9 @@ public class ChainService {
     @Transactional
     public ChainResponse updateProgressStatus(Report report, ProgressStatus currentProgressStatus) {
         if (currentProgressStatus.ordinal() >= ProgressStatus.values().length-1) {
+
+            report.setCaseClose();
+            reportRepository.save(report);
             throw new RuntimeException("last progress status is " + currentProgressStatus.ordinal());
         }
 

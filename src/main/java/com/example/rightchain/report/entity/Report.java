@@ -60,5 +60,9 @@ public class Report extends BaseTimeEntity {
         this.isCaseClose = false;
         this.chains = chains;
     }
+
+    public void setCaseClose() {
+        this.isCaseClose = true;
+    }
 }
 
