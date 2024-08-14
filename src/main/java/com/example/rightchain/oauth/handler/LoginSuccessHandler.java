@@ -32,6 +32,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
         response.sendRedirect("http://localhost:53000/");
-
     }
+
 }
