@@ -29,22 +29,21 @@ public class ReportService {
     private final ChainService chainService;
 
     @Transactional
-    public Report writeReport(CreateReportRequest createReportRequest, Account account, List<FileMetadata> fileMetadata) throws IOException {
+    public ReportResponse writeReport(CreateReportRequest createReportRequest, Account account, List<FileMetadata> fileMetadata) throws IOException {
 
-        Report report = Report.builder()
+        Report report = reportRepository.save(Report.builder()
                 .account(account)
                 .reportType(createReportRequest.reportType())
                 .content(createReportRequest.content())
                 .title(createReportRequest.title())
                 .chains(new ArrayList<>())
                 .files(fileMetadata) // 연관관계 주입
-                .build();
+                .build());
 
-        reportRepository.save(report);
         chainService.createChain(report);
 
 
-        return report;
+        return ReportResponse.from(report);
     }
 
     public ReportResponse getReportById(Long reportId) {

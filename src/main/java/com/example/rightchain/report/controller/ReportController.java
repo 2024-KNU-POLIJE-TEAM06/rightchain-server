@@ -41,7 +41,7 @@ public class ReportController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER') and isAuthenticated()")
-    public ResponseEntity<String> writeReport(
+    public ResponseEntity<ReportResponse> writeReport(
             Authentication authentication, //test this
             @RequestBody CreateReportRequest createReportRequest) throws IOException {
 
@@ -49,15 +49,17 @@ public class ReportController {
         Account account = customOAuth2User.getAccount();
         List<FileMetadata> fileMetadata = new ArrayList<>();
 
-        for (Long fileId : createReportRequest.filesId()) {
-            FileMetadata currentFileMetadata = fileMetadataRepository.findById(fileId).orElseThrow(()-> new FileNotFoundException("File not found"));
-            fileMetadata.add(currentFileMetadata);
+        if (createReportRequest.filesId() != null && !createReportRequest.filesId().isEmpty()) {
+            for (Long fileId : createReportRequest.filesId()) {
+                FileMetadata currentFileMetadata = fileMetadataRepository.findById(fileId).orElseThrow(()-> new FileNotFoundException("File not found"));
+                fileMetadata.add(currentFileMetadata);
+            }
         }
 
-        Report report = reportService.writeReport(createReportRequest, account, fileMetadata);
+        ReportResponse response = reportService.writeReport(createReportRequest, account, fileMetadata);
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(report.getTitle());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 

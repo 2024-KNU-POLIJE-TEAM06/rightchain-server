@@ -1,6 +1,7 @@
 package com.example.rightchain.chain.controller;
 
 import com.example.rightchain.chain.dto.request.ChainStackRequest;
+import com.example.rightchain.chain.dto.response.ChainResponse;
 import com.example.rightchain.chain.service.ChainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,9 @@ public class ChainController {
     private final ChainService chainService;
 
     @PostMapping("/stacks/{reportId}")
-    public ResponseEntity<String> stackChain(
-            @PathVariable("reportId") Long reportId,
-            @RequestBody ChainStackRequest chainStackRequest) {
+    public ResponseEntity<ChainResponse> stackChain(
+            @PathVariable("reportId") Long reportId) {
 
-        chainService.stackChain(reportId, chainStackRequest.walletName());
-
-        return ResponseEntity.ok("Wallet named '" + chainStackRequest.walletName() + "' has been successfully stacked.");
+        return ResponseEntity.ok(chainService.stackChain(reportId));
     }
 }

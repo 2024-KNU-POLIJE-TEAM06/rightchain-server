@@ -1,5 +1,6 @@
 package com.example.rightchain.chain.service;
 
+import com.example.rightchain.chain.dto.response.ChainResponse;
 import com.example.rightchain.chain.entity.Chain;
 import com.example.rightchain.chain.entity.ProgressStatus;
 import com.example.rightchain.chain.repository.ChainRepository;
@@ -38,28 +39,16 @@ public class ChainService {
     }
 
     @Transactional
-    public void stackChain(Long reportId, String walletName) {
+    public ChainResponse stackChain(Long reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(()-> new RuntimeException("report not found"));
         ProgressStatus currentProgressStatus = getCurrentProgress(report);
-        if (walletName.equals(ENTRY_POINT)) {
-            updateProgressStatus(report, currentProgressStatus);
-        } else {
-            String address = blockSDKApi.createWallet(walletName);
 
-            chainRepository.save(
-                    Chain.builder()
-                            .address(address)
-                            .walletName(walletName)
-                            .progressStatus(currentProgressStatus)
-                            .report(report)
-                            .build());
-        }
-
+        return updateProgressStatus(report, currentProgressStatus);
     }
 
     @Transactional
-    public void updateProgressStatus(Report report, ProgressStatus currentProgressStatus) {
-        if (currentProgressStatus.ordinal() >= ProgressStatus.values().length) {
+    public ChainResponse updateProgressStatus(Report report, ProgressStatus currentProgressStatus) {
+        if (currentProgressStatus.ordinal() >= ProgressStatus.values().length-1) {
             throw new RuntimeException("last progress status is " + currentProgressStatus.ordinal());
         }
 
@@ -68,13 +57,15 @@ public class ChainService {
         String walletName = ProgressStatus.getProgressStatusDescription(updatedProgressStatus);
 
         String address = blockSDKApi.createWallet(walletName);
-        chainRepository.save(
+        Chain chain = chainRepository.save(
                 Chain.builder()
                         .address(address)
                         .walletName(walletName)
                         .progressStatus(updatedProgressStatus)
                         .report(report)
                         .build());
+
+        return ChainResponse.from(chain);
     }
 
     private ProgressStatus getCurrentProgress(Report report) {

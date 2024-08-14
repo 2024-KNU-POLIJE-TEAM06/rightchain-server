@@ -3,6 +3,7 @@ package com.example.rightchain.wallet.api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
@@ -43,45 +44,48 @@ public class BlockSDKApi {
         }
 
         Map payload = (Map) Objects.requireNonNull(response.getBody()).get("payload");
+        log.info("Wallet created successfully with address: {}", payload.get("address"));
 
         return (String) payload.get("address");
     }
 
-    public Map readWallet(String address) {
-        final int LIMIT = 100;
-        final String URI = blockchainUrl +  "/address/"+address+"/info?api_token="
-                + API_TOKEN + "&offset=0&limit=" + LIMIT + "&order_direction=desc";
+    /**
+     * 지갑 주소를 사용해 지갑 정보를 조회하는 메서드
+     * @param address 지갑 주소
+     * @return 지갑의 기본 정보 (예: 잔액, 이름 등)
+     */
+    public Map<String, Object> readWallet(String address) {
+        String url = blockchainUrl + "/address/" + address + "/info?api_token=" + API_TOKEN;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map> response = restTemplate.exchange(
-                URI,
+                url,
                 HttpMethod.GET,
                 requestEntity,
                 Map.class
         );
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new IllegalStateException();
+        if (response.getStatusCode() != HttpStatus.OK || !response.hasBody()) {
+            log.error("Failed to retrieve wallet information for address: {}", address);
+            throw new IllegalStateException("Failed to retrieve wallet information");
         }
 
-        Map payload = (Map) Objects.requireNonNull(response.getBody()).get("payload");
-        List<Map> dataList = (List<Map>) payload.get("data");
+        Map<String, Object> walletInfo = (Map<String, Object>) response.getBody().get("payload");
+        log.info("Retrieved wallet info for address {}: {}", address, walletInfo);
 
-        for (Map data : dataList) {
-            String data_address = (String) data.get("address");
-            if (data_address.equals(address)) {
-                return data;
-            }
-        }
-
-        return null;
+        return walletInfo;
     }
-    /*
+
+    /**
+     * transaction transmission
+     * we have to change data to hex value
+     *
     public String sendTransaction(String walletAddress, String toAddress, String hexValue) throws Exception {
         String url = blockchainUrl + "/transaction/send?api_token=" + API_TOKEN;
         HttpHeaders headers = new HttpHeaders();
