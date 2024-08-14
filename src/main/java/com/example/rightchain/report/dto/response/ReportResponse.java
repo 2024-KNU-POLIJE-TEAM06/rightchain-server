@@ -5,6 +5,8 @@ import com.example.rightchain.file.entity.FileMetadata;
 import com.example.rightchain.report.entity.Report;
 import com.example.rightchain.report.entity.ReportType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +18,9 @@ public record ReportResponse(
         boolean isCaseClose,
         String accountName,
         List<FileMetadata> files,
-        List<ReportReadInChain> chains
+        List<ReportReadInChain> chains,
+        Long likes,
+        LocalDateTime createdAt
 ) {
 
     public static ReportResponse from(Report report) {
@@ -34,7 +38,9 @@ public record ReportResponse(
                                 .progressStatus(chain.getProgressStatus())
                                 .address(chain.getAddress())
                                 .build())
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                (long) report.getLikes().size(),
+                report.getCreatedAt()
         );
     }
 

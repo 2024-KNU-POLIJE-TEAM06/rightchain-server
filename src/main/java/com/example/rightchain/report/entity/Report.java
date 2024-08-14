@@ -1,6 +1,7 @@
 package com.example.rightchain.report.entity;
 
 import com.example.rightchain.account.entity.Account;
+import com.example.rightchain.base.BaseTimeEntity;
 import com.example.rightchain.chain.entity.Chain;
 import com.example.rightchain.file.entity.FileMetadata;
 import com.example.rightchain.like.entity.Like;
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Report {
+public class Report extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
